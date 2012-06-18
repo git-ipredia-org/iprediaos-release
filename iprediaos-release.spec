@@ -7,7 +7,7 @@ Version:	1
 Release:	1
 License:	GPLv2
 Group:		System Environment/Base
-Source:		%{name}-%{version}.tar.gz
+Source:		%{name}-%{version}.tar.bz2
 Obsoletes:	redhat-release
 Provides:	redhat-release = %{version}-%{release}
 Provides:	system-release = %{version}-%{release}
