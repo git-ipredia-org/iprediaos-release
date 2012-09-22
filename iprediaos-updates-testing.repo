@@ -1,26 +1,26 @@
 [updates-testing]
-name=Fedora $releasever - $basearch - Test Updates
+name=IprediaOS $releasever - $basearch - Test Updates
 failovermethod=priority
-#baseurl=http://download.fedoraproject.org/pub/fedora/linux/updates/testing/$releasever/$basearch/
-mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=updates-testing-f$releasever&arch=$basearch
+baseurl=http://download.ipredia.i2p/pub/iprediaos/linux/updates/testing/$releasever/$basearch/
+        http://download.ipredia.org/pub/iprediaos/linux/updates/testing/$releasever/$basearch/
 enabled=0
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$basearch
 
 [updates-testing-debuginfo]
-name=Fedora $releasever - $basearch - Test Updates Debug
+name=IprediaOS $releasever - $basearch - Test Updates Debug
 failovermethod=priority
-#baseurl=http://download.fedoraproject.org/pub/fedora/linux/updates/testing/$releasever/$basearch/debug/
-mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=updates-testing-debug-f$releasever&arch=$basearch
+baseurl=http://download.ipredia.i2p/pub/iprediaos/linux/updates/testing/$releasever/$basearch/debug/
+        http://download.ipredia.org/pub/iprediaos/linux/updates/testing/$releasever/$basearch/debug/
 enabled=0
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$basearch
 
 [updates-testing-source]
-name=Fedora $releasever - Test Updates Source
+name=IprediaOS $releasever - Test Updates Source
 failovermethod=priority
-#baseurl=http://download.fedoraproject.org/pub/fedora/linux/updates/testing/$releasever/SRPMS/
-mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=updates-testing-source-f$releasever&arch=$basearch
+baseurl=http://download.ipredia.i2p/pub/iprediaos/linux/updates/testing/$releasever/SRPMS/
+        http://download.ipredia.org/pub/iprediaos/linux/updates/testing/$releasever/SRPMS/
 enabled=0
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$basearch
