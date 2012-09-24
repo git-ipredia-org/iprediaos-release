@@ -5,7 +5,7 @@ baseurl=http://download.ipredia.i2p/pub/iprediaos/linux/updates/testing/$release
         http://download.ipredia.org/pub/iprediaos/linux/updates/testing/$releasever/$basearch/
 enabled=0
 gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$basearch
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-iprediaos-$basearch
 
 [updates-testing-debuginfo]
 name=IprediaOS $releasever - $basearch - Test Updates Debug
@@ -14,7 +14,7 @@ baseurl=http://download.ipredia.i2p/pub/iprediaos/linux/updates/testing/$release
         http://download.ipredia.org/pub/iprediaos/linux/updates/testing/$releasever/$basearch/debug/
 enabled=0
 gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$basearch
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-iprediaos-$basearch
 
 [updates-testing-source]
 name=IprediaOS $releasever - Test Updates Source
@@ -23,4 +23,4 @@ baseurl=http://download.ipredia.i2p/pub/iprediaos/linux/updates/testing/$release
         http://download.ipredia.org/pub/iprediaos/linux/updates/testing/$releasever/SRPMS/
 enabled=0
 gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$basearch
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-iprediaos-$basearch
