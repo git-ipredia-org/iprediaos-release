@@ -63,6 +63,7 @@ ID=iprediaos
 VERSION_ID=%{version}
 PRETTY_NAME="IprediaOS %{version} (%{release_name})"
 ANSI_COLOR=0;34
+CPE_NAME="cpe:/o:ipredia:iprediaos:%{version}"
 EOF
 
 install -d -m 755 $RPM_BUILD_ROOT/etc/pki/rpm-gpg
