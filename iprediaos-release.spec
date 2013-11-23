@@ -22,7 +22,7 @@ define the release.
 
 %package rawhide
 Summary:        Rawhide repo definitions
-Requires:	generic-release = %{version}-%{release}
+Requires:	iprediaos-release = %{version}-%{release}
 Conflicts:	fedora-release-rawhide
 
 %description rawhide
