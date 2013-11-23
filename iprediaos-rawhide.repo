@@ -22,8 +22,8 @@
 [rawhide]
 name=IprediaOS - Rawhide - Developmental packages for the next IprediaOS release
 failovermethod=priority
-baseurl=http://download.ipredia.i2p/pub/iprediaos/linux/development/$basearch/os/
-        http://download.ipredia.org/pub/iprediaos/linux/development/$basearch/os/
+baseurl=http://download.ipredia.i2p/pub/iprediaos/linux/development/rawhide/$basearch/os/
+        http://download.ipredia.org/pub/iprediaos/linux/development/rawhide/$basearch/os/
 #mirrorlist=https://mirrors.ipredia.org/metalink?repo=rawhide&arch=$basearch
 enabled=0
 gpgcheck=0
@@ -32,8 +32,8 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-iprediaos-$basearch file:///etc/pki/r
 [rawhide-debuginfo]
 name=IprediaOS - Rawhide - Debug
 failovermethod=priority
-baseurl=http://download.ipredia.i2p/pub/iprediaos/linux/development/$basearch/debug/
-        http://download.ipredia.org/pub/iprediaos/linux/development/$basearch/debug/
+baseurl=http://download.ipredia.i2p/pub/iprediaos/linux/development/rawhide/$basearch/debug/
+        http://download.ipredia.org/pub/iprediaos/linux/development/rawhide/$basearch/debug/
 #mirrorlist=https://mirrors.ipredia.org/metalink?repo=rawhide-debug&arch=$basearch
 enabled=0
 gpgcheck=0
@@ -42,8 +42,8 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-iprediaos-$basearch file:///etc/pki/r
 [rawhide-source]
 name=IprediaOS - Rawhide - Source
 failovermethod=priority
-baseurl=http://download.ipredia.i2p/pub/iprediaos/linux/development/source/SRPMS/
-        http://download.ipredia.org/pub/iprediaos/linux/development/source/SRPMS/
+baseurl=http://download.ipredia.i2p/pub/iprediaos/linux/development/rawhide/source/SRPMS/
+        http://download.ipredia.org/pub/iprediaos/linux/development/rawhide/source/SRPMS/
 #mirrorlist=https://mirrors.ipredia.org/metalink?repo=rawhide-source&arch=$basearch
 enabled=0
 gpgcheck=0
