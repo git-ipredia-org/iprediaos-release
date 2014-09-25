@@ -1,0 +1,9 @@
+#
+# IprediaOS Server
+#
+
+# The Cockpit web-based system management console
+enable cockpit.socket
+
+# The IprediaOS Server Role administration API
+enable rolekit.service

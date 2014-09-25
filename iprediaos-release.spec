@@ -1,196 +1,176 @@
-%define release_name Winston
-%define dist_version 1
+%define release_name Rawhide
+%define dist_version 2
+%define bug_version Rawhide
 
-Summary:	IprediaOS release files
-Name:		iprediaos-release
-Version:	1
-Release:	1
-License:	GPLv2
-Group:		System Environment/Base
-Source:		%{name}-%{version}.tar.bz2
-Obsoletes:	redhat-release
-Provides:	redhat-release = %{version}-%{release}
-Provides:	system-release = %{version}-%{release}
-# Comment this out if we're building for a non-rawhide target
-#Requires:	iprediaos-release-rawhide = %{version}-%{release}
-BuildArch:	noarch
-Conflicts:	fedora-release
+Summary:        IprediaOS release files
+Name:           iprediaos-release
+Version:        2
+Release:        0.5
+License:        MIT
+Group:          System Environment/Base
+URL:            http://ipredia.org
+Source:         %{name}-%{version}.tar.bz2
+Obsoletes:      redhat-release
+Provides:       redhat-release
+Provides:       system-release
+Provides:       system-release(%{version})
+Requires:       iprediaos-repos(%{version})
+BuildArch:      noarch
 
 %description
-IprediaOS release files such as yum configs and various /etc/ files that
-define the release. 
+IprediaOS release files such as various /etc/ files that define the release.
 
-%package rawhide
-Summary:        Rawhide repo definitions
-Requires:	iprediaos-release = %{version}-%{release}
-Conflicts:	fedora-release-rawhide
+%package standard
+Summary:        Base package for non-product-specific default configurations
+Provides:       system-release-standard
+Provides:       system-release-standard(%{version})
+Requires:       iprediaos-release = %{version}-%{release}
+Conflicts:      iprediaos-release-cloud
+Conflicts:      iprediaos-release-server
+Conflicts:      iprediaos-release-workstation
 
-%description rawhide
-This package provides the rawhide repo definitions.
+%description standard
+Provides a base package for non-product-specific configuration files to
+depend on.
 
-%package notes
-Summary:	Release Notes
-License:	Open Publication
-Group:		System Environment/Base
-Provides:	system-release-notes = %{version}-%{release}
-Conflicts:	fedora-release-notes
+%package cloud
+Summary:        Base package for IprediaOS Cloud-specific default configurations
+Provides:       system-release-cloud
+Provides:       system-release-cloud(%{version})
+Requires:       iprediaos-release = %{version}-%{release}
+Conflicts:      iprediaos-release-server
+Conflicts:      iprediaos-release-standard
+Conflicts:      iprediaos-release-workstation
 
-%description notes
-Generic release notes package.
+%description cloud
+Provides a base package for IprediaOS Cloud-specific configuration files to
+depend on.
 
+%package server
+Summary:        Base package for IprediaOS Server-specific default configurations
+Provides:       system-release-server
+Provides:       system-release-server(%{version})
+Requires:       iprediaos-release = %{version}-%{release}
+Requires:       systemd
+Requires:       cockpit
+Requires:       rolekit
+Requires(post):	sed
+Requires(post):	systemd
+Conflicts:      iprediaos-release-cloud
+Conflicts:      iprediaos-release-standard
+Conflicts:      iprediaos-release-workstation
+
+%description server
+Provides a base package for IprediaOS Server-specific configuration files to
+depend on.
+
+%package workstation
+Summary:        Base package for IprediaOS Workstation-specific default configurations
+Provides:       system-release-workstation
+Provides:       system-release-workstation(%{version})
+Requires:       iprediaos-release = %{version}-%{release}
+Conflicts:      iprediaos-release-cloud
+Conflicts:      iprediaos-release-server
+Conflicts:      iprediaos-release-standard
+
+%description workstation
+Provides a base package for IprediaOS Workstation-specific configuration files to
+depend on.
 
 %prep
 %setup -q
+sed -i 's|@@VERSION@@|%{dist_version}|g' IprediaOS-Legal-README.txt
 
 %build
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/etc
-echo "IprediaOS release %{version} (%{release_name})" > $RPM_BUILD_ROOT/etc/fedora-release
+echo "IprediaOS release %{version} (%{release_name})" > $RPM_BUILD_ROOT/etc/iprediaos-release
 echo "cpe:/o:ipredia:iprediaos:%{version}" > $RPM_BUILD_ROOT/etc/system-release-cpe
-cp -p $RPM_BUILD_ROOT/etc/fedora-release $RPM_BUILD_ROOT/etc/issue
+cp -p $RPM_BUILD_ROOT/etc/iprediaos-release $RPM_BUILD_ROOT/etc/issue
 echo "Kernel \r on an \m (\l)" >> $RPM_BUILD_ROOT/etc/issue
 cp -p $RPM_BUILD_ROOT/etc/issue $RPM_BUILD_ROOT/etc/issue.net
 echo >> $RPM_BUILD_ROOT/etc/issue
-ln -s fedora-release $RPM_BUILD_ROOT/etc/redhat-release
-ln -s fedora-release $RPM_BUILD_ROOT/etc/system-release
+ln -s iprediaos-release $RPM_BUILD_ROOT/etc/redhat-release
+ln -s iprediaos-release $RPM_BUILD_ROOT/etc/system-release
 
 cat << EOF >>$RPM_BUILD_ROOT/etc/os-release
 NAME=IprediaOS
-VERSION="%{version} (%{release_name})"
+VERSION="%{dist_version} (%{release_name})"
 ID=iprediaos
-VERSION_ID=%{version}
-PRETTY_NAME="IprediaOS %{version} (%{release_name})"
-ANSI_COLOR=0;34
-CPE_NAME="cpe:/o:ipredia:iprediaos:%{version}"
+VERSION_ID=%{dist_version}
+PRETTY_NAME="IprediaOS %{dist_version} (%{release_name})"
+ANSI_COLOR="0;34"
+CPE_NAME="cpe:/o:ipredia:iprediaos:%{dist_version}"
+HOME_URL="http://ipredia.org/"
+BUG_REPORT_URL="http://bugzilla.ipredia.org/"
+IPREDIA_BUGZILLA_PRODUCT="IprediaOS"
+IPREDIA_BUGZILLA_PRODUCT_VERSION=%{bug_version}
+IPREDIA_SUPPORT_PRODUCT="IprediaOS"
+IPREDIA_SUPPORT_PRODUCT_VERSION=%{bug_version}
 EOF
-
-install -d -m 755 $RPM_BUILD_ROOT/etc/pki/rpm-gpg
-
-install -m 644 RPM-GPG-KEY* $RPM_BUILD_ROOT/etc/pki/rpm-gpg/
-
-# Install all the keys, link the primary keys to primary arch files
-# and to compat generic location
-pushd $RPM_BUILD_ROOT/etc/pki/rpm-gpg/
-for arch in i386 x86_64
-  do
-  ln -s RPM-GPG-KEY-fedora-%{dist_version}-primary RPM-GPG-KEY-fedora-$arch
-  ln -s RPM-GPG-KEY-iprediaos-%{dist_version}-primary RPM-GPG-KEY-iprediaos-$arch
-done
-ln -s RPM-GPG-KEY-fedora-%{dist_version}-primary RPM-GPG-KEY-fedora
-ln -s RPM-GPG-KEY-iprediaos-%{dist_version}-primary RPM-GPG-KEY-iprediaos
-for arch in arm armhfp arm64 ppc ppc64 s390 s390x sparc sparc64
-  do
-  ln -s RPM-GPG-KEY-fedora-%{dist_version}-secondary RPM-GPG-KEY-fedora-$arch
-  ln -s RPM-GPG-KEY-iprediaos-%{dist_version}-secondary RPM-GPG-KEY-iprediaos-$arch
-done
-popd
-
-install -d -m 755 $RPM_BUILD_ROOT/etc/yum.repos.d
-for file in iprediaos*repo ; do
-  install -m 644 $file $RPM_BUILD_ROOT/etc/yum.repos.d
-done
 
 # Set up the dist tag macros
-install -d -m 755 $RPM_BUILD_ROOT/etc/rpm
-cat >> $RPM_BUILD_ROOT/etc/rpm/macros.dist << EOF
+install -d -m 755 $RPM_BUILD_ROOT%{_rpmconfigdir}/macros.d
+cat >> $RPM_BUILD_ROOT%{_rpmconfigdir}/macros.d/macros.dist << EOF
 # dist macros.
 
-%%iprediaos		%{dist_version}
-%%dist		.ipos%{dist_version}
-%%ipos%{dist_version}		1
+%%ipredia                %{dist_version}
+%%dist                .ipos%{dist_version}
+%%ipos%{dist_version}                1
 EOF
+
+# Add Product-specific presets
+mkdir -p %{buildroot}%{_prefix}/lib/systemd/system-preset/
+# IprediaOS Server
+install -m 0644 80-server.preset %{buildroot}%{_prefix}/lib/systemd/system-preset/
+
+%post server
+if [ $1 -eq 1 ] ; then
+        # Initial installation; fix up after %%systemd_post in packages
+	# possibly installed before our preset file was added
+	units=$(sed -n 's/^enable//p' \
+		< %{_prefix}/lib/systemd/system-preset/80-server.preset)
+        /usr/bin/systemctl preset $units >/dev/null 2>&1 || :
+fi
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc GPL 
+%{!?_licensedir:%global license %%doc}
+%license LICENSE IprediaOS-Legal-README.txt
 %config %attr(0644,root,root) /etc/os-release
-%config %attr(0644,root,root) /etc/fedora-release
+%config %attr(0644,root,root) /etc/iprediaos-release
 /etc/redhat-release
 /etc/system-release
 %config %attr(0644,root,root) /etc/system-release-cpe
-%dir /etc/yum.repos.d
-%config(noreplace) /etc/yum.repos.d/iprediaos.repo
-%config(noreplace) /etc/yum.repos.d/iprediaos-updates*.repo
 %config(noreplace) %attr(0644,root,root) /etc/issue
 %config(noreplace) %attr(0644,root,root) /etc/issue.net
-%config %attr(0644,root,root) /etc/rpm/macros.dist
-%dir /etc/pki/rpm-gpg
-/etc/pki/rpm-gpg/*
+%attr(0644,root,root) %{_rpmconfigdir}/macros.d/macros.dist
 
-%files notes
-%defattr(-,root,root,-)
-%doc README.Generic-Release-Notes
+%files standard
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
 
-%files rawhide
-%defattr(-,root,root,-)
-%config(noreplace) /etc/yum.repos.d/iprediaos-rawhide.repo
+%files cloud
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+
+%files server
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%{_prefix}/lib/systemd/system-preset/80-server.preset
+
+%files workstation
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
 
 %changelog
+* Fre Jun 25 2014 Mattias Ohlsson <mattias.ohlsson@inprose.com> - 2-0.5
+- Update for IprediaOS 2 Rawhide.
+
 * Mon Jun 18 2012 Mattias Ohlsson <mattias.ohlsson@inprose.com> - 1-1
 - rebrand for iprediaos
-
-* Fri Feb 10 2012 Tom Callaway <spot@fedoraproject.org> - 18-0.2
-- sync with fedora-release model
-
-* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 17-0.3
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
-
-* Fri Oct 28 2011 Tom Callaway <spot@fedoraproject.org> - 17-0.2
-- initial 17
-
-* Fri Jul 22 2011 Tom Callaway <spot@fedoraproject.org> - 16-0.2
-- require -rawhide subpackage if we're built for rawhide
-
-* Fri May 13 2011 Tom Callaway <spot@fedoraproject.org> - 16-0.1
-- initial 16
-
-* Fri May 13 2011 Tom Callaway <spot@fedoraproject.org> - 15-1
-- sync to f15 final
-
-* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 15-0.4
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
-
-* Wed Oct 20 2010 Tom "spot" Callaway <tcallawa@redhat.com> - 15-0.3
-- sync to rawhide
-
-* Wed Feb 24 2010 Tom "spot" Callaway <tcallawa@redhat.com> - 14-0.2
-- fix broken requires
-
-* Wed Feb 17 2010 Tom "spot" Callaway <tcallawa@redhat.com> - 14-0.1
-- update to sync with fedora-release
-
-* Mon Nov 16 2009 Tom "spot" Callaway <tcallawa@redhat.com> - 12-1
-- Update for F12 final
-
-* Fri Jul 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 11.90-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
-
-* Wed May 20 2009 Tom "spot" Callaway <tcallawa@redhat.com> - 11.90-1
-- Build for F12 collection
-
-* Wed May 20 2009 Tom "spot" Callaway <tcallawa@redhat.com> - 11-1
-- resync with fedora-release package
-
-* Tue Feb 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 10.90-3
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
-
-* Fri Jan 30 2009 Tom "spot" Callaway <tcallawa@redhat.com> 10.90-2
-- drop Requires: system-release-notes
-
-* Thu Nov 20 2008 Tom "spot" Callaway <tcallawa@redhat.com> 10.90-1
-- 10.90
-
-* Thu Nov 20 2008 Tom "spot" Callaway <tcallawa@redhat.com> 10-1
-- Bump to 10, update repos
-
-* Mon Sep 22 2008 Tom "spot" Callaway <tcallawa@redhat.com> 9.91-2
-- add Conflicts
-- further sanitize descriptions
-
-* Mon Sep 22 2008 Tom "spot" Callaway <tcallawa@redhat.com> 9.91-1
-- initial package for generic-release and generic-release-notes

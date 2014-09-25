@@ -1,11 +1,16 @@
-NAME=$(shell awk '/Name/ { print $$2 }' *.spec)
-VERSION := $(shell awk '/Version:/ { print $$2 }' $(NAME).spec)
-RELEASE := $(shell awk '/Release:/ { print $$2 }' $(NAME).spec | sed 's|%{?dist}||g')
+VERSION=$(shell awk '/Version:/ { print $$2 }' iprediaos-release.spec)
+RELEASE=$(shell awk '/Release:/ { print $$2 }' iprediaos-release.spec)
+GITTAG=iprediaos-release-$(VERSION)
 
-archive:
-	@git archive --format=tar --prefix=$(NAME)-$(VERSION)/ HEAD > $(NAME)-$(VERSION).tar
-	@bzip2 -f $(NAME)-$(VERSION).tar
-	@echo "$(NAME)-$(VERSION).tar.bz2 created"
+all:
 
-clean:
-	rm -f *~ *bz2
+tag-archive:
+	@git tag -a -m "Tag as $(GITTAG)" -f $(GITTAG)
+	@echo "Tagged as $(GITTAG)"
+
+create-archive:
+	@git archive --prefix $(GITTAG)/ --format tar $(GITTAG) |bzip2 > $(GITTAG).tar.bz2
+	@echo ""
+	@echo "The final archive is in $(GITTAG).tar.bz2"
+
+archive: tag-archive create-archive
